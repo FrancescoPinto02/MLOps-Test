@@ -25,8 +25,7 @@ def extract_data():
     MONGO_DB = os.getenv("MONGO_DB")
     MONGO_AUTH_DB = os.getenv("MONGO_AUTH_DB", "admin")
 
-    mongo_uri = (f"mongodb+srv://{MONGO_USER}:{MONGO_PASSWORD}@{MONGO_CLUSTER}"
-                 f"/?retryWrites=true&w=majority&authSource={MONGO_AUTH_DB}")
+    mongo_uri = f"mongodb+srv://{MONGO_USER}:{MONGO_PASSWORD}@{MONGO_CLUSTER}/?retryWrites=true&w=majority&authSource={MONGO_AUTH_DB}"
 
     try:
         client = MongoClient(mongo_uri)
