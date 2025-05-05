@@ -27,10 +27,6 @@ reviews_cursor = db.reviews.find()
 games_df = pd.DataFrame(list(games_cursor))
 reviews_df = pd.DataFrame(list(reviews_cursor))
 
-# Rimuovi campi inutili
-games_df.drop(columns=['_class', 'cover', 'screenshots', 'video'], errors='ignore', inplace=True)
-reviews_df.drop(columns=['_class'], errors='ignore', inplace=True)
-
 # Salva in CSV in data/raw/
 os.makedirs("data/raw", exist_ok=True)
 games_df.to_csv("data/raw/games.csv", index=False)
