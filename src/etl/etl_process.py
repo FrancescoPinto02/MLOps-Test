@@ -2,7 +2,7 @@ import os
 import pandas as pd
 from dotenv import load_dotenv
 from pymongo import MongoClient
-from langdetect import detect
+from langdetect import detect, LangDetectException
 from src.utils.logger import setup_logger  # Importa il logger
 
 # Configura il logger
@@ -25,7 +25,8 @@ def extract_data():
     MONGO_DB = os.getenv("MONGO_DB")
     MONGO_AUTH_DB = os.getenv("MONGO_AUTH_DB", "admin")
 
-    mongo_uri = f"mongodb+srv://{MONGO_USER}:{MONGO_PASSWORD}@{MONGO_CLUSTER}/?retryWrites=true&w=majority&authSource={MONGO_AUTH_DB}"
+    mongo_uri = (f"mongodb+srv://{MONGO_USER}:{MONGO_PASSWORD}@{MONGO_CLUSTER}"
+                 f"/?retryWrites=true&w=majority&authSource={MONGO_AUTH_DB}")
 
     try:
         client = MongoClient(mongo_uri)
@@ -46,7 +47,9 @@ def transform_data(games_df, reviews_df):
     logger.info("🔄 Trasformazione dei dati...")
 
     # 1. Rimuovere colonne non necessarie
-    games_df.drop(columns=['_class', 'cover', 'screenshots', 'video'], inplace=True, errors='ignore')
+    games_df.drop(columns=['_class', 'cover', 'screenshots', 'video'],
+                  inplace=True, errors='ignore')
+
     reviews_df.drop(columns=['_class'], inplace=True, errors='ignore')
 
     # 2. Rinomina le colonne
@@ -73,7 +76,7 @@ def transform_data(games_df, reviews_df):
     def detect_language(text):
         try:
             return detect(text)
-        except:
+        except LangDetectException:
             return 'unknown'
 
     reviews_df['language'] = reviews_df['review_text'].apply(detect_language)
